@@ -7,6 +7,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap'
 }).addTo(map);
 
+
 var truckIcon = L.icon({
     iconUrl: '../assets/truck.png',
 
@@ -17,6 +18,7 @@ var truckIcon = L.icon({
 
 
 let devices = []
+let markers = []
 
 async function getDevices() {
     let response = await fetch(`/api/devices`, {
@@ -32,7 +34,12 @@ async function getDevices() {
     getTelemetry(devices)
 }
 
+
 async function getTelemetry(params) {
+    while(markers.length > 0) {
+        markers.pop();
+    }
+
     let response = await fetch(`https://flespi.io/gw/devices/${params.join()}/telemetry/ble.sensor.temperature.1,position`, {
         method: 'GET',
         headers: {
@@ -44,11 +51,13 @@ async function getTelemetry(params) {
 
     for (let i=0; i<data.result.length; i++) {
         var marker = L.marker([data.result[i].telemetry.position.value.latitude, data.result[i].telemetry.position.value.longitude], {icon: truckIcon}).addTo(map)
+
         if(data.result[i].telemetry['ble.sensor.temperature.1']) {
             marker.bindPopup(`<b> Speed: ${data.result[i].telemetry.position.value.speed}</b></br><b> Device ID: ${data.result[i].id}</b></br><b> Temperature: ${(((data.result[i].telemetry['ble.sensor.temperature.1'].value) * 1.8) + 32).toFixed(1)} °F</b></br><b> Last Report: ${Date(data.result[i].telemetry.position.ts*1000).toLocaleString()}</b>`)
         } else {
             marker.bindPopup(`<b> Speed: ${data.result[i].telemetry.position.value.speed}</b></br><b> Device ID: ${data.result[i].id}</b></br><b> Last Report: ${Date(data.result[i].telemetry.position.ts*1000).toLocaleString()}</b>`)
         }
+        markers.push(marker)
     }
 }
 
