@@ -30,7 +30,7 @@ function timeConverter(UNIX_timestamp){
     var min = a.getMinutes();
     var sec = a.getSeconds();
     var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
-    return time;
+    return a;
 }
 
 async function getDevices() {
@@ -62,7 +62,7 @@ async function getTelemetry(params) {
         var marker = L.marker([data.result[i].telemetry.position.value.latitude, data.result[i].telemetry.position.value.longitude], {icon: truckIcon}).addTo(map)
 
         if(data.result[i].telemetry['ble.sensor.temperature.1']) {
-            marker.bindPopup(`<b> Speed: ${(data.result[i].telemetry.position.value.speed)/1.609}</b></br><b> Device ID: ${data.result[i].id}</b></br><b> Temperature: ${(((data.result[i].telemetry['ble.sensor.temperature.1'].value) * 1.8) + 32).toFixed(1)} °F</b></br><b> Last Report: ${timeConverter(data.result[i].telemetry.position.ts)}</b>`)
+            marker.bindPopup(`<b> Speed: ${(data.result[i].telemetry.position.value.speed)/1.609}</b></br><b> Device ID: ${data.result[i].id}</b></br><b> Temperature: ${(((data.result[i].telemetry['ble.sensor.temperature.1'].value) * 1.8) + 32).toFixed(1)} °F</b></br><b> Last Report: ${timeConverter(data.result[i].telemetry['ble.sensor.temperature.1'].ts)}</b>`)
         } else {
             marker.bindPopup(`<b> Speed: ${data.result[i].telemetry.position.value.speed}</b></br><b> Device ID: ${data.result[i].id}</b></br><b> Last Report: ${timeConverter(data.result[i].telemetry.position.ts)}</b>`)
         }
