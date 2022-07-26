@@ -81,6 +81,43 @@ router.get('/map', (req, res) => {
     });
 });
 
+router.get('/reports', (req, res) => {
+  if (!req.session.loggedIn) {
+    res.redirect('/login');
+    return;
+  }
+
+  Device.findAll({
+    where: {
+      user_id: req.session.user_id
+    },
+    attributes: [
+      'id', 
+      'name', 
+      'device'
+    ],
+    order: [['createdAt', 'DESC']],
+    include: [
+      {
+        model: User,
+        attributes: ['username', 'id']
+      }
+    ]
+  })
+      .then(dbPostData => {
+        const posts = dbPostData.map(post => post.get({ plain: true }));
+        res.render('reports', { 
+            posts,
+            loggedIn: req.session.loggedIn,
+            username: req.session.username
+        });
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(500).json(err);
+    });
+});
+
 router.get('/login', (req, res) => {
     if (req.session.loggedIn) {
         res.redirect('/');
