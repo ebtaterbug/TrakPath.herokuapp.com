@@ -66,7 +66,7 @@ async function getTelemetry(params) {
         var marker = L.marker([data.result[i].telemetry.position.value.latitude, data.result[i].telemetry.position.value.longitude], {icon: truckIcon}).addTo(map)
 
         if(data.result[i].telemetry['ble.sensor.temperature.1']) {
-            marker.bindPopup(`<b>Location on ${timeConverter(data.result[i].telemetry['ble.sensor.temperature.1'].ts)}</b></br><b> Speed: ${Math.round((data.result[i].telemetry.position.value.speed)/1.609)} Mph</b></br><b> Device ID: ${data.result[i].id}</b></br><b> Temperature: ${(((data.result[i].telemetry['ble.sensor.temperature.1'].value) * 1.8) + 32).toFixed(1)} °F - ${timeConverter(data.result[i].telemetry.position.ts)}</b>`)
+            marker.bindPopup(`<b>Location on ${timeConverter(data.result[i].telemetry.position.ts)}</b></br><b> Speed: ${Math.round((data.result[i].telemetry.position.value.speed)/1.609)} Mph</b></br><b> Device ID: ${data.result[i].id}</b></br><b> Temperature: ${(((data.result[i].telemetry['ble.sensor.temperature.1'].value) * 1.8) + 32).toFixed(1)} °F - ${timeConverter(data.result[i].telemetry['ble.sensor.temperature.1'].ts)}</b>`)
         } else {
             marker.bindPopup(`<b> Speed: ${Math.round((data.result[i].telemetry.position.value.speed)/1.609)} Mph</b></br><b> Device ID: ${data.result[i].id}</b></br><b> Last Report: ${timeConverter(data.result[i].telemetry.position.ts)}</b>`)
         }
