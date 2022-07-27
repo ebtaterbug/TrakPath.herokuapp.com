@@ -71,16 +71,15 @@ async function getTelemetry(params) {
             <b>Location on ${timeConverter(data.result[i].telemetry.position.ts)}</b></br>
             <b> Speed: ${Math.round((data.result[i].telemetry.position.value.speed)/1.609)} Mph</b></br>
             <b> Device ID: ${data.result[i].id}</b></br><b> Temperature: ${(((data.result[i].telemetry['ble.sensor.temperature.1'].value) * 1.8) + 32).toFixed(1)} °F - ${timeConverter(data.result[i].telemetry['ble.sensor.temperature.1'].ts)}</b></br>
-            <b>Solar Charging: ${data.result[i].telemetry['solar.panel.charging.status'].value}</b></br><b>Battery: ${data.result[i].telemetry['battery.level'].value}%</b></br><b>Humidity: ${data.result[i].telemetry['ble.sensor.humidity.1'].value}%</b></br>
-            <b>Light Detected: ${data.result[i].telemetry['ble.sensor.light.status.1'].value}</b>
+            <b>Solar Charging: ${data.result[i].telemetry['solar.panel.charging.status'].value}</b></br><b>Battery: ${data.result[i].telemetry['battery.level'].value}%</b></br><b>Humidity: ${data.result[i].telemetry['ble.sensor.humidity.1'].value}%</b></br>            
             
             `)
         } else {
             marker.bindPopup(`
-
+            
+            <b> Location on ${timeConverter(data.result[i].telemetry.position.ts)}</b>
             <b> Speed: ${Math.round((data.result[i].telemetry.position.value.speed)/1.609)} Mph</b></br>
             <b> Device ID: ${data.result[i].id}</b></br>
-            <b> Last Report: ${timeConverter(data.result[i].telemetry.position.ts)}</b>
             
             `)
         }

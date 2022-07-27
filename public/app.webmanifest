@@ -1,0 +1,20 @@
+{
+    "name": "TrakPath",
+    "short_name": "TrakPath",
+    "icons": [
+        {
+        "src": "favicon/apple-touch-icon.png",
+        "sizes": "72x72",
+        "type": "image/png"
+        },
+        {
+        "src": "favicon/favicon-32x32.png",
+        "sizes": "32x32",
+        "type": "image/png"
+        }
+    ],
+    "theme_color": "#30bffc",
+    "background_color": "#30bffc",
+    "start_url": "https://trakpath.herokuapp.com/",
+    "display": "standalone"
+}
