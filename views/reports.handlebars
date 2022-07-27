@@ -2,7 +2,15 @@
     <form class="new-post-form">
       
       <div class="card-body text-center mt-4">
-            <input type="number" id="device" name="device" class="form-control col m-2" placeholder="Device ID" />
+          <label>
+            <span>Start:</span>
+            <input type='date' class="form-control start-date"/>
+          </label>
+          <label>
+            <span>End:</span>
+            <input type='date' class="form-control end-date"/>
+          </label>
+            <input type="number" id="device" name="device" class="form-control mt-2" placeholder="Device ID" />
             <button type="submit" class="btn btn-primary mt-3">Search</button>
       </div>
 

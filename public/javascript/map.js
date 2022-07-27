@@ -77,7 +77,7 @@ async function getTelemetry(params) {
         } else {
             marker.bindPopup(`
             
-            <b> Location on ${timeConverter(data.result[i].telemetry.position.ts)}</b>
+            <b> Location on ${timeConverter(data.result[i].telemetry.position.ts)}</b></br>
             <b> Speed: ${Math.round((data.result[i].telemetry.position.value.speed)/1.609)} Mph</b></br>
             <b> Device ID: ${data.result[i].id}</b></br>
             

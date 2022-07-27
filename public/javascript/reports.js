@@ -20,8 +20,11 @@ async function getReports(e) {
     e.preventDefault()
 
     const device = document.querySelector('#device').value.trim()
+    const startDate = Date.parse(document.querySelector('.start-date').value.trim())
+    const endDate = Date.parse(document.querySelector('.end-date').value.trim())
 
-    let response = await fetch(`https://flespi.io/gw/devices/${device}/messages`, {
+
+    let response = await fetch(`https://flespi.io/gw/devices/${device}/messages?data=%7B%22from%22%3A${startDate.toString().substr(0, startDate.toString().length - 3)}%2C%22to%22%3A${endDate.toString().substr(0, endDate.toString().length - 3)}%7D`, {
       method: 'GET',
       headers: {
           Authorization: 'FlespiToken e2SFPN6kTwArUxc4HjWilFsyiZUcSYYWOErrioCZK0gsogmTp9ZBCgXK5FKNszy4',
@@ -43,7 +46,6 @@ async function getReports(e) {
     }).join("")
     document.querySelector(".reports").insertAdjacentHTML("afterbegin", html)
 }
-
 
 
 document.querySelector('.new-post-form').addEventListener('submit', getReports);
