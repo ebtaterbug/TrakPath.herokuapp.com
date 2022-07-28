@@ -32,7 +32,6 @@ async function getReports(e) {
   })
 
   let data = await response.json()
-  console.log(html)
 
   const html = data.result
     .map(report => {
