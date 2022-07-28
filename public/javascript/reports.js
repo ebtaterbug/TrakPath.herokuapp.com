@@ -38,9 +38,9 @@ async function getReports(e) {
     .map(report => {
         return `
         <div class="px-2 my-2 w-100 d-flex justify-content-between border">
-            <p class="m-0 small">Time: ${timeConverter(report.timestamp)}</p>
+            <p class="m-0 small">${timeConverter(report.timestamp)}</p>
             <a class="m-0 small" target="_blank" href="https://www.google.com/maps/search/${report["position.latitude"] || ''},${report["position.longitude"] || ''}">${report["position.latitude"] || ''}, ${report["position.longitude"] || ''}</a>
-            <p class="m-0 small">Temperature: ${(((report['ble.sensor.temperature.1']) * 1.8) + 32).toFixed(1)} °F</p>
+            <p class="m-0 small">${(((report['ble.sensor.temperature.1']) * 1.8) + 32).toFixed(1)} °F</p>
         </div>
         `
     }).join("")
