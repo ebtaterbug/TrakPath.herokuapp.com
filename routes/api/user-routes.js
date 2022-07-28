@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { User, Device } = require('../../models');
+require('dotenv').config();
 
 router.get('/', (req, res) => {
   User.findAll({
@@ -97,6 +98,7 @@ router.post('/logout', (req, res) => {
 });
 
 router.put('/:id', (req, res) => {
+  if (req.body.passcode === process.env.USER_EDIT_PW) {
   User.update(req.body, {
     individualHooks: true,
     where: {
@@ -114,6 +116,9 @@ router.put('/:id', (req, res) => {
       console.log(err);
       res.status(500).json(err);
     });
+  } else {
+    res.json({ message: 'Incorrect credendtials' });
+  }
 });
 
 router.delete('/:id', (req, res) => {
