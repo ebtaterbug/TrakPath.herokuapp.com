@@ -16,7 +16,7 @@ function timeConverter(UNIX_timestamp){
 async function getReports(e) {
     e.preventDefault()
     document.querySelector(".reports").innerHTML = ''
-    
+
     const device = document.querySelector('#device').value.trim()
     let startDate = Date.parse(document.querySelector('.start-date').value.trim())
     let endDate = Date.parse(document.querySelector('.end-date').value.trim())

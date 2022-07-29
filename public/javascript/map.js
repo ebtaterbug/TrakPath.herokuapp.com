@@ -28,12 +28,10 @@ function timeConverter(UNIX_timestamp){
     var date = a.getDate();
     var hour = a.getHours();
     var min = a.getMinutes();
-    var sec = a.getSeconds();
-    if (min < 10) {
-        var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + '0' + min
-    } else {
-        var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min
-    }
+
+    
+    var time = date + ' ' + month + ' ' + year + ' ' + `${(hour<=12) ? hour : hour-12}` + ':' + `${(min<10) ? '0' : ''}` + min + `${(hour<12) ? ' AM' : ' PM'}`
+
     return time;
 }
 
