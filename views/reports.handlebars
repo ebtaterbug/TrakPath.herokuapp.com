@@ -1,16 +1,29 @@
 <div class="card row p-0 w-50 my-5 ">
     <form class="new-post-form">
-      
       <div class="card-body text-center mt-4">
-          <label>
-            <span>Start:</span>
-            <input type='date' class="form-control start-date"/>
-          </label>
-          <label>
-            <span>End:</span>
-            <input type='date' class="form-control end-date"/>
-          </label>
-            <input type="number" id="device" name="device" class="form-control mt-2" placeholder="Device ID" />
+            <input 
+              type='text' 
+              class="form-control end-date mt-2 text-center" 
+              placeholder="Start Date"
+              onfocus="(this.type='date')"
+              onblur="(this.type='text')"
+            />
+            <input 
+              type='text' 
+              class="form-control end-date mt-2 text-center" 
+              placeholder="End Date"
+              onfocus="(this.type='date')"
+              onblur="(this.type='text')"
+            />
+            <input 
+              type="text" 
+              id="device" 
+              name="device" 
+              class="form-control mt-2 text-center" 
+              placeholder="Device ID" 
+              onfocus="(this.type='number', this.placeholder='')"
+              onblur="(this.type='text', this.placeholder='Device ID')"
+            />
             <button type="submit" class="btn btn-primary mt-3">Search</button>
       </div>
     </form>
