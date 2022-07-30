@@ -6,18 +6,15 @@
     --blue: #02a9e5;
 }
 
-
 #map { 
-    height: 83vh;
-    width: 100vw;
+    height: 85vh;
+    width: 100%;
+    position: absolute;
+    right: 0px
 }
 
 .report {
     font-size: small;
-}
-
-.container {
-    width: 100vw;
 }
 
 ul, ol {

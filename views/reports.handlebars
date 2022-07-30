@@ -1,30 +1,31 @@
-<div class="card row p-0 w-50 my-5 ">
-    <form class="new-post-form">
-      <div class="card-body text-center mt-4">
-            <input 
-              type='date' 
-              class="form-control start-date mt-2 text-center"
-            />
-            <input 
-              type='date' 
-              class="form-control end-date mt-2 text-center"
-            />
-            <input 
-              type="text" 
-              id="device" 
-              name="device" 
-              class="form-control mt-2 text-center" 
-              placeholder="Device ID" 
-              onfocus="(this.type='number', this.placeholder='')"
-              onblur="(this.type='text', this.placeholder='Device ID')"
-            />
-            <button type="submit" class="btn btn-primary mt-3">Search</button>
-      </div>
-    </form>
+<div class="p-0 row justify-content-around">
+  <div class="card row p-0 w-50 my-5">
+      <form class="new-post-form">
+        <div class="card-body text-center mt-4">
+              <input 
+                type='date' 
+                class="form-control start-date mt-2 text-center"
+              />
+              <input 
+                type='date' 
+                class="form-control end-date mt-2 text-center"
+              />
+              <input 
+                type="text" 
+                id="device" 
+                name="device" 
+                class="form-control mt-2 text-center" 
+                placeholder="Device ID" 
+                onfocus="(this.type='number', this.placeholder='')"
+                onblur="(this.type='text', this.placeholder='Device ID')"
+              />
+              <button type="submit" class="btn btn-primary mt-3">Search</button>
+        </div>
+      </form>
+  </div>
 </div>
 
-
-<div class="reports px-5"></div>
+<div class="reports"></div>
 
 
 <script src="/javascript/reports.js"></script>
