@@ -52,9 +52,9 @@ var markers = []
 
 async function getTelemetry(params) {
     // Delete old markers
-    for (i=0; i<markers.length; i++) {
-        map.removeLayer(markers[i]);
-    }  
+    // for (i=0; i<markers.length; i++) {
+    //     map.removeLayer(markers[i]);
+    // }  
 
     let response = await fetch(`https://flespi.io/gw/devices/${params.join()}/telemetry/ble.sensor.temperature.1,position,solar.panel.charging.status,battery.level,ble.sensor.humidity.1,ble.sensor.light.status.1`, {
         method: 'GET',
@@ -65,27 +65,54 @@ async function getTelemetry(params) {
     })
     let data = await response.json();
 
-    for (let i=0; i<data.result.length; i++) {
-        var marker = L.marker([data.result[i].telemetry.position.value.latitude, data.result[i].telemetry.position.value.longitude], {icon: truckIcon}).addTo(map)
-        markers.push(marker)
+    if (markers.length) {
+        for (let i=0; i<data.result.length; i++) { 
+            markers[i].unbindPopup()
+            markers[i].setLatLng([data.result[i].telemetry.position.value.latitude, data.result[i].telemetry.position.value.longitude], {icon: truckIcon})
+            
+            if(data.result[i].telemetry['ble.sensor.temperature.1']) {
+                markers[i].bindPopup(`
 
-        if(data.result[i].telemetry['ble.sensor.temperature.1']) {
-            marker.bindPopup(`
+                <b>Location on ${timeConverter(data.result[i].telemetry.position.ts)}</b></br>
+                <b> Speed: ${Math.round((data.result[i].telemetry.position.value.speed)/1.609)} Mph</b></br>
+                <b> Device ID: ${data.result[i].id}</b></br><b> Temperature: ${(((data.result[i].telemetry['ble.sensor.temperature.1'].value) * 1.8) + 32).toFixed(1)} °F - ${timeConverter(data.result[i].telemetry['ble.sensor.temperature.1'].ts)}</b></br>
+                <b>Solar Charging: ${data.result[i].telemetry['solar.panel.charging.status'].value}</b></br><b>Battery: ${data.result[i].telemetry['battery.level'].value}%</b></br><b>Humidity: ${data.result[i].telemetry['ble.sensor.humidity.1'].value}%</b></br>            
+                
+                `)
+            } else {
+                markers[i].bindPopup(`
+                
+                <b> Location on ${timeConverter(data.result[i].telemetry.position.ts)}</b></br>
+                <b> Speed: ${Math.round((data.result[i].telemetry.position.value.speed)/1.609)} Mph</b></br>
+                <b> Device ID: ${data.result[i].id}</b></br>
+                
+                `)
+            }
 
-            <b>Location on ${timeConverter(data.result[i].telemetry.position.ts)}</b></br>
-            <b> Speed: ${Math.round((data.result[i].telemetry.position.value.speed)/1.609)} Mph</b></br>
-            <b> Device ID: ${data.result[i].id}</b></br><b> Temperature: ${(((data.result[i].telemetry['ble.sensor.temperature.1'].value) * 1.8) + 32).toFixed(1)} °F - ${timeConverter(data.result[i].telemetry['ble.sensor.temperature.1'].ts)}</b></br>
-            <b>Solar Charging: ${data.result[i].telemetry['solar.panel.charging.status'].value}</b></br><b>Battery: ${data.result[i].telemetry['battery.level'].value}%</b></br><b>Humidity: ${data.result[i].telemetry['ble.sensor.humidity.1'].value}%</b></br>            
-            
-            `)
-        } else {
-            marker.bindPopup(`
-            
-            <b> Location on ${timeConverter(data.result[i].telemetry.position.ts)}</b></br>
-            <b> Speed: ${Math.round((data.result[i].telemetry.position.value.speed)/1.609)} Mph</b></br>
-            <b> Device ID: ${data.result[i].id}</b></br>
-            
-            `)
+        }
+    } else {
+        for (let i=0; i<data.result.length; i++) {
+            var marker = L.marker([data.result[i].telemetry.position.value.latitude, data.result[i].telemetry.position.value.longitude], {icon: truckIcon}).addTo(map)
+            markers.push(marker)
+
+            if(data.result[i].telemetry['ble.sensor.temperature.1']) {
+                marker.bindPopup(`
+
+                <b>Location on ${timeConverter(data.result[i].telemetry.position.ts)}</b></br>
+                <b> Speed: ${Math.round((data.result[i].telemetry.position.value.speed)/1.609)} Mph</b></br>
+                <b> Device ID: ${data.result[i].id}</b></br><b> Temperature: ${(((data.result[i].telemetry['ble.sensor.temperature.1'].value) * 1.8) + 32).toFixed(1)} °F - ${timeConverter(data.result[i].telemetry['ble.sensor.temperature.1'].ts)}</b></br>
+                <b>Solar Charging: ${data.result[i].telemetry['solar.panel.charging.status'].value}</b></br><b>Battery: ${data.result[i].telemetry['battery.level'].value}%</b></br><b>Humidity: ${data.result[i].telemetry['ble.sensor.humidity.1'].value}%</b></br>            
+                
+                `)
+            } else {
+                marker.bindPopup(`
+                
+                <b> Location on ${timeConverter(data.result[i].telemetry.position.ts)}</b></br>
+                <b> Speed: ${Math.round((data.result[i].telemetry.position.value.speed)/1.609)} Mph</b></br>
+                <b> Device ID: ${data.result[i].id}</b></br>
+                
+                `)
+            }
         }
     }
 }
