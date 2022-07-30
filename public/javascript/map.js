@@ -7,6 +7,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap'
 }).addTo(map);
 
+var markers = L.markerClusterGroup()
 
 var truckIcon = L.icon({
     iconUrl: '../assets/truck.png',
@@ -51,7 +52,14 @@ async function getDevices() {
 
 
 async function getTelemetry(params) {
-      let response = await fetch(`https://flespi.io/gw/devices/${params.join()}/telemetry/ble.sensor.temperature.1,position,solar.panel.charging.status,battery.level,ble.sensor.humidity.1,ble.sensor.light.status.1`, {
+    map.eachLayer(function(layer) {
+        if (layer instanceof L.MarkerClusterGroup)
+        {
+            map.removeLayer(layer)
+        }
+    })
+
+    let response = await fetch(`https://flespi.io/gw/devices/${params.join()}/telemetry/ble.sensor.temperature.1,position,solar.panel.charging.status,battery.level,ble.sensor.humidity.1,ble.sensor.light.status.1`, {
         method: 'GET',
         headers: {
             Authorization: 'FlespiToken e2SFPN6kTwArUxc4HjWilFsyiZUcSYYWOErrioCZK0gsogmTp9ZBCgXK5FKNszy4',
@@ -81,10 +89,13 @@ async function getTelemetry(params) {
             
             `)
         }
+        markers.addLayer(marker)
     }
 }
 
+
+
 getDevices()
 setInterval(function() {
-    location.reload()
-}, 600000)
+    getDevices()
+}, 30000)
