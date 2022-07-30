@@ -7,8 +7,6 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap'
 }).addTo(map);
 
-var markers = L.markerClusterGroup()
-
 var truckIcon = L.icon({
     iconUrl: '../assets/truck.png',
 
@@ -50,14 +48,13 @@ async function getDevices() {
     getTelemetry(devices)
 }
 
+var markers = []
 
 async function getTelemetry(params) {
-    map.eachLayer(function(layer) {
-        if (layer instanceof L.MarkerClusterGroup)
-        {
-            map.removeLayer(layer)
-        }
-    })
+    // Delete old markers
+    for (i=0; i<markers.length; i++) {
+        map.removeLayer(markers[i]);
+    }  
 
     let response = await fetch(`https://flespi.io/gw/devices/${params.join()}/telemetry/ble.sensor.temperature.1,position,solar.panel.charging.status,battery.level,ble.sensor.humidity.1,ble.sensor.light.status.1`, {
         method: 'GET',
@@ -70,6 +67,7 @@ async function getTelemetry(params) {
 
     for (let i=0; i<data.result.length; i++) {
         var marker = L.marker([data.result[i].telemetry.position.value.latitude, data.result[i].telemetry.position.value.longitude], {icon: truckIcon}).addTo(map)
+        markers.push(marker)
 
         if(data.result[i].telemetry['ble.sensor.temperature.1']) {
             marker.bindPopup(`
@@ -89,7 +87,6 @@ async function getTelemetry(params) {
             
             `)
         }
-        markers.addLayer(marker)
     }
 }
 
