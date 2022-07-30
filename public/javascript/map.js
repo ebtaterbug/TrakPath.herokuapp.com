@@ -51,10 +51,6 @@ async function getDevices() {
 var markers = []
 
 async function getTelemetry(params) {
-    // Delete old markers
-    // for (i=0; i<markers.length; i++) {
-    //     map.removeLayer(markers[i]);
-    // }  
 
     let response = await fetch(`https://flespi.io/gw/devices/${params.join()}/telemetry/ble.sensor.temperature.1,position,solar.panel.charging.status,battery.level,ble.sensor.humidity.1,ble.sensor.light.status.1`, {
         method: 'GET',
@@ -115,11 +111,12 @@ async function getTelemetry(params) {
             }
         }
     }
+
 }
 
 
 
 getDevices()
 setInterval(function() {
-    getDevices()
-}, 30000)
+    getTelemetry(devices)
+}, 15000)
