@@ -60,9 +60,11 @@ async function getDevice(device, maxtemp, mintemp, number) {
             Authorization: 'FlespiToken e2SFPN6kTwArUxc4HjWilFsyiZUcSYYWOErrioCZK0gsogmTp9ZBCgXK5FKNszy4',
             Accept: 'application/json'
         }
-    })
+    }).catch(err => { console.log(err) })
+
     let data = await response.json();
     let deviceTemp = data.result[0].telemetry['ble.sensor.temperature.1'].value
+    
     if ((deviceTemp*1.8)+32 > maxtemp || (deviceTemp*1.8)+32 < mintemp) {
         console.log((deviceTemp*1.8)+32, 'Out of bounds', `Max Temp: ${maxtemp}  Min Temp: ${mintemp}`)
         client.messages
