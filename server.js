@@ -49,36 +49,39 @@ const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = require('twilio')(accountSid, authToken);
 const { Tempalert } = require('./models');
-const fetch = (...args) => require('node-fetch').then(({default: fetch}) => fetch(...args))
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args))
 
 
 
 async function getDevice(device, maxtemp, mintemp, number) {
-    const response = await fetch(`https://flespi.io/gw/devices/${device}/telemetry/ble.sensor.temperature.1`, {
-        method: 'GET',
-        headers: {
-            Authorization: 'FlespiToken e2SFPN6kTwArUxc4HjWilFsyiZUcSYYWOErrioCZK0gsogmTp9ZBCgXK5FKNszy4',
-            Accept: 'application/json'
-        }
-    })
-
-    let data = await response.json();
-    let deviceTemp = data.result[0].telemetry['ble.sensor.temperature.1'].value
-
-    if ((deviceTemp*1.8)+32 > maxtemp || (deviceTemp*1.8)+32 < mintemp) {
-        console.log((deviceTemp*1.8)+32, 'Out of bounds', `Max Temp: ${maxtemp}  Min Temp: ${mintemp}`)
-        client.messages
-        .create({
-            body: `Device ${device} has temperature outside threshold ${maxtemp}°F - ${mintemp}°F. Current temperature is ${((deviceTemp*1.8)+32).toFixed(1)}°F`,
-            from: '+13253265027',
-            to: `+1${number}`
+    try {
+        const response = await fetch(`https://flespi.io/gw/devices/${device}/telemetry/ble.sensor.temperature.1`, {
+            method: 'GET',
+            headers: {
+                Authorization: 'FlespiToken e2SFPN6kTwArUxc4HjWilFsyiZUcSYYWOErrioCZK0gsogmTp9ZBCgXK5FKNszy4',
+                Accept: 'application/json'
+            }
         })
-        .then(message => console.log(message.sid));
-    } else {
-        console.log((deviceTemp*1.8)+32, 'Within bounds', `Max Temp: ${maxtemp}  Min Temp: ${mintemp}`)
-    }
+        
+        let data = await response.json();
+        let deviceTemp = data.result[0].telemetry['ble.sensor.temperature.1'].value
 
+        if ((deviceTemp*1.8)+32 > maxtemp || (deviceTemp*1.8)+32 < mintemp) {
+            console.log((deviceTemp*1.8)+32, 'Out of bounds', `Max Temp: ${maxtemp}  Min Temp: ${mintemp}`)
+            client.messages
+            .create({
+                body: `Device ${device} has temperature outside threshold ${maxtemp}°F - ${mintemp}°F. Current temperature is ${((deviceTemp*1.8)+32).toFixed(1)}°F`,
+                from: '+13253265027',
+                to: `+1${number}`
+            })
+            .then(message => console.log(message.sid));
+        } else {
+            console.log((deviceTemp*1.8)+32, 'Within bounds', `Max Temp: ${maxtemp}  Min Temp: ${mintemp}`)
+        }
     
+    } catch (error) {
+        console.log(error)
+    }    
 }
 
 function alert() {
