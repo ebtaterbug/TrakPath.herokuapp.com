@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const sequelize = require('../config/connection');
-const { User, Device } = require('../models');
+const { User, Device, Tempalert } = require('../models');
 const withAuth = require('../utils/auth');
 
 router.get('/', withAuth, (req, res) => {
@@ -25,6 +25,40 @@ router.get('/', withAuth, (req, res) => {
         const posts = dbPostData.map(post => post.get({ plain: true }));
         res.render('devices', { 
             posts,
+            loggedIn: req.session.loggedIn,
+            username: req.session.username
+        });
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(500).json(err);
+    });
+});
+
+router.get('/alerts', withAuth, (req, res) => {
+  Tempalert.findAll({
+    where: {
+      user_id: req.session.user_id
+    },
+    attributes: [
+      'id', 
+      'device',
+      'number',
+      'maxtemp',
+      'mintemp'
+    ],
+    order: [['createdAt', 'DESC']],
+    include: [
+      {
+        model: User,
+        attributes: ['username', 'id']
+      }
+    ]
+  })
+      .then(data => {
+        const alerts = data.map(alert => alert.get({ plain: true }));
+        res.render('alerts', { 
+            alerts,
             loggedIn: req.session.loggedIn,
             username: req.session.username
         });

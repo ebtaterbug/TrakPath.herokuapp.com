@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { User, Device } = require('../../models');
+const { User, Device, Tempalert } = require('../../models');
 require('dotenv').config();
 
 router.get('/', (req, res) => {
@@ -23,6 +23,10 @@ router.get('/:id', (req, res) => {
       {
         model: Device,
         attributes: ['id', 'name', 'device']
+      },
+      {
+        model: Tempalert,
+        attributes: ['id', 'device', 'number', 'maxtemp', 'mintemp']
       }
     ]
   })
