@@ -52,6 +52,7 @@ const { Tempalert } = require('./models');
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
 
+
 async function getDevice(device, maxtemp, mintemp, number) {
     let response = await fetch(`https://flespi.io/gw/devices/${device}/telemetry/ble.sensor.temperature.1`, {
         method: 'GET',
