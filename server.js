@@ -54,7 +54,7 @@ const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch
 
 
 async function getDevice(device, maxtemp, mintemp, number) {
-    let response = await fetch(`https://flespi.io/gw/devices/${device}/telemetry/ble.sensor.temperature.1`, {
+    const response = await fetch(`https://flespi.io/gw/devices/${device}/telemetry/ble.sensor.temperature.1`, {
         method: 'GET',
         headers: {
             Authorization: 'FlespiToken e2SFPN6kTwArUxc4HjWilFsyiZUcSYYWOErrioCZK0gsogmTp9ZBCgXK5FKNszy4',
