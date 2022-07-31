@@ -4,6 +4,11 @@ const sequelize = require('./config/connection');
 const path = require('path');
 const exphbs = require('express-handlebars');
 const hbs = exphbs.create({ });
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const client = require('twilio')(accountSid, authToken);
+const { Tempalert } = require('./models');
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args))
 require('dotenv').config();
 
 const app = express();
@@ -45,13 +50,6 @@ sequelize.sync({ force: false }).then(() => {
 
 
 // Twilio Alerts
-const accountSid = process.env.TWILIO_ACCOUNT_SID;
-const authToken = process.env.TWILIO_AUTH_TOKEN;
-const client = require('twilio')(accountSid, authToken);
-const { Tempalert } = require('./models');
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args))
-
-
 
 async function getDevice(device, maxtemp, mintemp, number) {
     try {
@@ -62,7 +60,7 @@ async function getDevice(device, maxtemp, mintemp, number) {
                 Accept: 'application/json'
             }
         })
-        
+
         let data = await response.json();
         let deviceTemp = data.result[0].telemetry['ble.sensor.temperature.1'].value
 
