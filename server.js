@@ -8,7 +8,7 @@ const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = require('twilio')(accountSid, authToken);
 const { Tempalert } = require('./models');
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args))
+const fetch = require('node-fetch')
 require('dotenv').config();
 
 const app = express();
@@ -50,7 +50,6 @@ sequelize.sync({ force: false }).then(() => {
 
 
 // Twilio Alerts
-
 async function getDevice(device, maxtemp, mintemp, number) {
     try {
         const response = await fetch(`https://flespi.io/gw/devices/${device}/telemetry/ble.sensor.temperature.1`, {
