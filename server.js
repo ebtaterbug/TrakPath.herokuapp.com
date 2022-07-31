@@ -49,7 +49,7 @@ const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = require('twilio')(accountSid, authToken);
 const { Tempalert } = require('./models');
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+const fetch = (...args) => require('node-fetch').then(({default: fetch}) => fetch(...args))
 
 
 
@@ -60,11 +60,11 @@ async function getDevice(device, maxtemp, mintemp, number) {
             Authorization: 'FlespiToken e2SFPN6kTwArUxc4HjWilFsyiZUcSYYWOErrioCZK0gsogmTp9ZBCgXK5FKNszy4',
             Accept: 'application/json'
         }
-    }).catch(err => { console.log(err) })
+    })
 
     let data = await response.json();
     let deviceTemp = data.result[0].telemetry['ble.sensor.temperature.1'].value
-    
+
     if ((deviceTemp*1.8)+32 > maxtemp || (deviceTemp*1.8)+32 < mintemp) {
         console.log((deviceTemp*1.8)+32, 'Out of bounds', `Max Temp: ${maxtemp}  Min Temp: ${mintemp}`)
         client.messages
