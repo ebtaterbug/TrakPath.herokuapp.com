@@ -4,6 +4,7 @@ const sequelize = require('./config/connection');
 const path = require('path');
 const exphbs = require('express-handlebars');
 const hbs = exphbs.create({ });
+require('dotenv').config();
 
 const app = express();
 const server = require('http').createServer(app);
@@ -44,8 +45,8 @@ sequelize.sync({ force: false }).then(() => {
 
 
 // Twilio Alerts
-const accountSid = 'AC625f0686a30c10b286bff6fd4109b931';
-const authToken = 'bb4f8735eadd5a606ec586b0e3274fd1';
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = require('twilio')(accountSid, authToken);
 const { Tempalert } = require('./models');
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
