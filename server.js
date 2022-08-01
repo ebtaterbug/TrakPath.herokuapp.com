@@ -116,7 +116,6 @@ function alert() {
     })
 }
 
-alert()
 setInterval(function() {
     alert()
-}, 15000)
+}, 300000)
