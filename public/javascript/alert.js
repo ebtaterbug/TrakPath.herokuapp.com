@@ -13,7 +13,7 @@ async function newFormHandler(e) {
             number,
             device,
             maxtemp,
-            mintemp
+            mintemp            
         }),
         headers: {
             'Content-Type': 'application/json'

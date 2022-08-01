@@ -27,6 +27,11 @@ Tempalert.init(
             type: DataTypes.INTEGER,
             allowNull: false
         },
+        messaged: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+            allowNull: false
+        },    
         user_id: {
             type: DataTypes.INTEGER,
             references: {

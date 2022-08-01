@@ -12,7 +12,8 @@ router.get('/', (req, res) => {
       'device',
       'number',
       'maxtemp',
-      'mintemp'
+      'mintemp',
+      'messaged'
     ],
     order: [['id', 'DESC']],
     include: [
@@ -83,6 +84,7 @@ router.put('/:id', (req, res) => {
         number: req.body.number,
         maxtemp: req.body.maxtemp,
         mintemp: req.body.mintemp,
+        messaged: req.body.messaged
     },
     {
       where: {

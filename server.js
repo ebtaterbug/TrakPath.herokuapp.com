@@ -8,7 +8,7 @@ const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = require('twilio')(accountSid, authToken);
 const { Tempalert } = require('./models');
-const fetch = require('node-fetch')
+const fetch = require('node-fetch');
 require('dotenv').config();
 
 const app = express();
@@ -50,7 +50,7 @@ sequelize.sync({ force: false }).then(() => {
 
 
 // Twilio Alerts
-async function getDevice(device, maxtemp, mintemp, number) {
+async function getDevice(device, maxtemp, mintemp, number, messaged, alertId) {
     try {
         const response = await fetch(`https://flespi.io/gw/devices/${device}/telemetry/ble.sensor.temperature.1`, {
             method: 'GET',
@@ -61,21 +61,37 @@ async function getDevice(device, maxtemp, mintemp, number) {
         })
 
         let data = await response.json();
-        let deviceTemp = data.result[0].telemetry['ble.sensor.temperature.1'].value
+        let deviceTemp = (data.result[0].telemetry['ble.sensor.temperature.1'].value*1.8)+32
 
-        if ((deviceTemp*1.8)+32 > maxtemp || (deviceTemp*1.8)+32 < mintemp) {
-            console.log((deviceTemp*1.8)+32, 'Out of bounds', `Max Temp: ${maxtemp}  Min Temp: ${mintemp}`)
+        if (messaged==='false' && (deviceTemp > maxtemp || deviceTemp < mintemp)) {
+            
+            console.log(deviceTemp, 'Out of bounds', `Max Temp: ${maxtemp}  Min Temp: ${mintemp}  Messaged: ${messaged}`)
             client.messages
             .create({
-                body: `Device ${device} has temperature outside threshold ${maxtemp}°F - ${mintemp}°F. Current temperature is ${((deviceTemp*1.8)+32).toFixed(1)}°F`,
+                body: `Device ${device} has temperature outside threshold ${maxtemp}°F - ${mintemp}°F. Current temperature is ${deviceTemp}°F`,
                 from: '+13253265027',
                 to: `+1${number}`
             })
             .then(message => console.log(message.sid));
-        } else {
-            console.log((deviceTemp*1.8)+32, 'Within bounds', `Max Temp: ${maxtemp}  Min Temp: ${mintemp}`)
+
+            Tempalert.update({ messaged: true }, { where: { id: alertId } }) 
+            
+
+        } 
+        
+        else if (deviceTemp < maxtemp && deviceTemp > mintemp) {
+
+            console.log(deviceTemp, 'Within bounds', `Max Temp: ${maxtemp}  Min Temp: ${mintemp}  Messaged: ${messaged}`)
+            Tempalert.update({ messaged: false, }, { where: { id: alertId } })
+
+        } 
+        
+        else {
+
+            console.log(deviceTemp, 'No Change', `Max Temp: ${maxtemp}  Min Temp: ${mintemp}  Messaged: ${messaged}`)
+            
         }
-    
+
     } catch (error) {
         console.log(error)
     }    
@@ -88,12 +104,13 @@ function alert() {
         'device',
         'number',
         'maxtemp',
-        'mintemp'
+        'mintemp',
+        'messaged'
         ],
         order: [['id', 'DESC']]
     }).then(data => {
         for (let i=0; i<data.length; i++) {
-            getDevice(JSON.stringify(data[i].device), JSON.stringify(data[i].maxtemp), JSON.stringify(data[i].mintemp), JSON.stringify(data[i].number))
+            getDevice(JSON.stringify(data[i].device), JSON.stringify(data[i].maxtemp), JSON.stringify(data[i].mintemp), JSON.stringify(data[i].number), JSON.stringify(data[i].messaged), JSON.stringify(data[i].id))
         }
         
     })
@@ -102,4 +119,4 @@ function alert() {
 alert()
 setInterval(function() {
     alert()
-}, 300000)
+}, 15000)
