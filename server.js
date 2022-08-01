@@ -42,7 +42,7 @@ app.set('view engine', 'handlebars');
 app.use(routes);
 
 // turn on connection to db and server
-sequelize.sync({ force: false }).then(() => {
+sequelize.sync({ force: true }).then(() => {
   server.listen(PORT, () => console.log(`Now listening at http://localhost:${PORT}`));
 });
 
@@ -50,72 +50,72 @@ sequelize.sync({ force: false }).then(() => {
 
 
 // Twilio Alerts
-async function getDevice(device, maxtemp, mintemp, number, messaged, alertId) {
-    try {
-        const response = await fetch(`https://flespi.io/gw/devices/${device}/telemetry/ble.sensor.temperature.1`, {
-            method: 'GET',
-            headers: {
-                Authorization: 'FlespiToken e2SFPN6kTwArUxc4HjWilFsyiZUcSYYWOErrioCZK0gsogmTp9ZBCgXK5FKNszy4',
-                Accept: 'application/json'
-            }
-        })
+// async function getDevice(device, maxtemp, mintemp, number, messaged, alertId) {
+//     try {
+//         const response = await fetch(`https://flespi.io/gw/devices/${device}/telemetry/ble.sensor.temperature.1`, {
+//             method: 'GET',
+//             headers: {
+//                 Authorization: 'FlespiToken e2SFPN6kTwArUxc4HjWilFsyiZUcSYYWOErrioCZK0gsogmTp9ZBCgXK5FKNszy4',
+//                 Accept: 'application/json'
+//             }
+//         })
 
-        let data = await response.json();
-        let deviceTemp = (data.result[0].telemetry['ble.sensor.temperature.1'].value*1.8)+32
+//         let data = await response.json();
+//         let deviceTemp = (data.result[0].telemetry['ble.sensor.temperature.1'].value*1.8)+32
 
-        if (messaged==='false' && (deviceTemp > maxtemp || deviceTemp < mintemp)) {
+//         if (messaged==='false' && (deviceTemp > maxtemp || deviceTemp < mintemp)) {
             
-            console.log(deviceTemp, 'Out of bounds', `Max Temp: ${maxtemp}  Min Temp: ${mintemp}  Messaged: ${messaged}`)
-            client.messages
-            .create({
-                body: `Device ${device} has temperature outside threshold ${maxtemp}°F - ${mintemp}°F. Current temperature is ${deviceTemp}°F`,
-                from: '+13253265027',
-                to: `+1${number}`
-            })
-            .then(message => console.log(message.sid));
+//             console.log(deviceTemp, 'Out of bounds', `Max Temp: ${maxtemp}  Min Temp: ${mintemp}  Messaged: ${messaged}`)
+//             client.messages
+//             .create({
+//                 body: `Device ${device} has temperature outside threshold ${maxtemp}°F - ${mintemp}°F. Current temperature is ${deviceTemp}°F`,
+//                 from: '+13253265027',
+//                 to: `+1${number}`
+//             })
+//             .then(message => console.log(message.sid));
 
-            Tempalert.update({ messaged: true }, { where: { id: alertId } }) 
+//             Tempalert.update({ messaged: true }, { where: { id: alertId } }) 
             
 
-        } 
+//         } 
         
-        else if (deviceTemp < maxtemp && deviceTemp > mintemp) {
+//         else if (deviceTemp < maxtemp && deviceTemp > mintemp) {
 
-            console.log(deviceTemp, 'Within bounds', `Max Temp: ${maxtemp}  Min Temp: ${mintemp}  Messaged: ${messaged}`)
-            Tempalert.update({ messaged: false, }, { where: { id: alertId } })
+//             console.log(deviceTemp, 'Within bounds', `Max Temp: ${maxtemp}  Min Temp: ${mintemp}  Messaged: ${messaged}`)
+//             Tempalert.update({ messaged: false, }, { where: { id: alertId } })
 
-        } 
+//         } 
         
-        else {
+//         else {
 
-            console.log(deviceTemp, 'No Change', `Max Temp: ${maxtemp}  Min Temp: ${mintemp}  Messaged: ${messaged}`)
+//             console.log(deviceTemp, 'No Change', `Max Temp: ${maxtemp}  Min Temp: ${mintemp}  Messaged: ${messaged}`)
             
-        }
+//         }
 
-    } catch (error) {
-        console.log(error)
-    }    
-}
+//     } catch (error) {
+//         console.log(error)
+//     }    
+// }
 
-function alert() {
-    Tempalert.findAll({
-        attributes: [
-        'id', 
-        'device',
-        'number',
-        'maxtemp',
-        'mintemp',
-        'messaged'
-        ],
-        order: [['id', 'DESC']]
-    }).then(data => {
-        for (let i=0; i<data.length; i++) {
-            getDevice(JSON.stringify(data[i].device), JSON.stringify(data[i].maxtemp), JSON.stringify(data[i].mintemp), JSON.stringify(data[i].number), JSON.stringify(data[i].messaged), JSON.stringify(data[i].id))
-        }
+// function alert() {
+//     Tempalert.findAll({
+//         attributes: [
+//         'id', 
+//         'device',
+//         'number',
+//         'maxtemp',
+//         'mintemp',
+//         'messaged'
+//         ],
+//         order: [['id', 'DESC']]
+//     }).then(data => {
+//         for (let i=0; i<data.length; i++) {
+//             getDevice(JSON.stringify(data[i].device), JSON.stringify(data[i].maxtemp), JSON.stringify(data[i].mintemp), JSON.stringify(data[i].number), JSON.stringify(data[i].messaged), JSON.stringify(data[i].id))
+//         }
         
-    })
-}
+//     })
+// }
 
-setInterval(function() {
-    alert()
-}, 300000)
+// setInterval(function() {
+//     alert()
+// }, 300000)
