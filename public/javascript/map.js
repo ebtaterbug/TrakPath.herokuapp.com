@@ -52,7 +52,7 @@ var markers = []
 
 async function getTelemetry(params) {
 
-    let response = await fetch(`https://flespi.io/gw/devices/${params.join()}/telemetry/ble.sensor.temperature.1,position,solar.panel.charging.status,battery.level,ble.sensor.humidity.1,ble.sensor.light.status.1`, {
+    let response = await fetch(`https://flespi.io/gw/devices/${params.join()}/telemetry/ble.sensor.temperature.1,position,solar.panel.charging.status,battery.level,ble.sensor.humidity.1`, {
         method: 'GET',
         headers: {
             Authorization: 'FlespiToken e2SFPN6kTwArUxc4HjWilFsyiZUcSYYWOErrioCZK0gsogmTp9ZBCgXK5FKNszy4',
@@ -65,20 +65,21 @@ async function getTelemetry(params) {
         for (let i=0; i<data.result.length; i++) { 
             markers[i].unbindPopup()
             markers[i].setLatLng([data.result[i].telemetry.position.value.latitude, data.result[i].telemetry.position.value.longitude], {icon: truckIcon})
-            
+            let speed = Math.round((data.result[i].telemetry.position.value.speed)/1.609)
+
             if(data.result[i].telemetry['ble.sensor.temperature.1']) {
                 markers[i].bindPopup(`
 
-                <b>Location on ${timeConverter(data.result[i].telemetry.position.ts)}</b></br>
-                <b> Speed: ${Math.round((data.result[i].telemetry.position.value.speed)/1.609)} Mph</b></br>
+                <b> ${(speed==0)?'Stopped':'Moving'} on ${timeConverter(data.result[i].telemetry.position.ts)}</b></br>
+                <b> Speed: ${speed} Mph</b></br>
                 <b> Device ID: ${data.result[i].id}</b></br><b> Temperature: ${(((data.result[i].telemetry['ble.sensor.temperature.1'].value) * 1.8) + 32).toFixed(1)} °F - ${timeConverter(data.result[i].telemetry['ble.sensor.temperature.1'].ts)}</b></br>
-                <b>Solar Charging: ${data.result[i].telemetry['solar.panel.charging.status'].value}</b></br><b>Battery: ${data.result[i].telemetry['battery.level'].value}%</b></br><b>Humidity: ${data.result[i].telemetry['ble.sensor.humidity.1'].value}%</b></br>            
+                <b> Solar Charging: ${data.result[i].telemetry['solar.panel.charging.status'].value}</b></br><b>Battery: ${data.result[i].telemetry['battery.level'].value}%</b></br><b>Humidity: ${data.result[i].telemetry['ble.sensor.humidity.1'].value}%</b></br>            
                 
                 `)
             } else {
                 markers[i].bindPopup(`
                 
-                <b> Location on ${timeConverter(data.result[i].telemetry.position.ts)}</b></br>
+                <b> ${(speed==0)?'Stopped':'Moving'} on ${timeConverter(data.result[i].telemetry.position.ts)}</b></br>
                 <b> Speed: ${Math.round((data.result[i].telemetry.position.value.speed)/1.609)} Mph</b></br>
                 <b> Device ID: ${data.result[i].id}</b></br>
                 
@@ -90,20 +91,21 @@ async function getTelemetry(params) {
         for (let i=0; i<data.result.length; i++) {
             var marker = L.marker([data.result[i].telemetry.position.value.latitude, data.result[i].telemetry.position.value.longitude], {icon: truckIcon}).addTo(map)
             markers.push(marker)
+            let speed = Math.round((data.result[i].telemetry.position.value.speed)/1.609)
 
             if(data.result[i].telemetry['ble.sensor.temperature.1']) {
                 marker.bindPopup(`
 
-                <b>Location on ${timeConverter(data.result[i].telemetry.position.ts)}</b></br>
+                <b>${(speed==0)?'Stopped':'Moving'} on ${timeConverter(data.result[i].telemetry.position.ts)}</b></br>
                 <b> Speed: ${Math.round((data.result[i].telemetry.position.value.speed)/1.609)} Mph</b></br>
                 <b> Device ID: ${data.result[i].id}</b></br><b> Temperature: ${(((data.result[i].telemetry['ble.sensor.temperature.1'].value) * 1.8) + 32).toFixed(1)} °F - ${timeConverter(data.result[i].telemetry['ble.sensor.temperature.1'].ts)}</b></br>
-                <b>Solar Charging: ${data.result[i].telemetry['solar.panel.charging.status'].value}</b></br><b>Battery: ${data.result[i].telemetry['battery.level'].value}%</b></br><b>Humidity: ${data.result[i].telemetry['ble.sensor.humidity.1'].value}%</b></br>            
+                <b> Solar Charging: ${data.result[i].telemetry['solar.panel.charging.status'].value}</b></br><b>Battery: ${data.result[i].telemetry['battery.level'].value}%</b></br><b>Humidity: ${data.result[i].telemetry['ble.sensor.humidity.1'].value}%</b></br>            
                 
                 `)
             } else {
                 marker.bindPopup(`
                 
-                <b> Location on ${timeConverter(data.result[i].telemetry.position.ts)}</b></br>
+                <b> ${(speed==0)?'Stopped':'Moving'} on ${timeConverter(data.result[i].telemetry.position.ts)}</b></br>
                 <b> Speed: ${Math.round((data.result[i].telemetry.position.value.speed)/1.609)} Mph</b></br>
                 <b> Device ID: ${data.result[i].id}</b></br>
                 

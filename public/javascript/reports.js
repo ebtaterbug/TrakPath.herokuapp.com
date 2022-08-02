@@ -36,13 +36,16 @@ async function getReports(e) {
 
   const html = data.result
     .map(report => {
-        return `
-        <div class="px-2 my-2 w-100 d-flex justify-content-between border report">
-            <p class="m-0 small">${timeConverter(report.timestamp)}</p>
-            <a class="m-0 small" target="_blank" href="https://www.google.com/maps/search/${report["position.latitude"] || ''},${report["position.longitude"] || ''}">${report["position.latitude"] || ''}, ${report["position.longitude"] || ''}</a>
-            <p class="m-0 small">${(((report['ble.sensor.temperature.1']) * 1.8) + 32).toFixed(1)} °F</p>
-        </div>
-        `
+        if (report["position.latitude"] || report['ble.sensor.temperature.1']) {
+
+            return `
+            <div class="px-2 my-2 w-100 d-flex justify-content-between border report">
+                <p class="m-0 small">${timeConverter(report.timestamp)}</p>
+                <a class="m-0 small" target="_blank" href="https://www.google.com/maps/search/${report["position.latitude"] || ''},${report["position.longitude"] || ''}">${report["position.latitude"] || ''}, ${report["position.longitude"] || ''}</a>
+                <p class="m-0 small">${(((report['ble.sensor.temperature.1']) * 1.8) + 32).toFixed(1)} °F</p>
+            </div>
+            `
+        }
     }).join("")
 
     document.querySelector(".reports").insertAdjacentHTML("afterbegin", html)
