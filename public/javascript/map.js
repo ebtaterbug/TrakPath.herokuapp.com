@@ -7,8 +7,8 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap'
 }).addTo(map);
 
-var truckIcon = L.icon({
-    iconUrl: '../assets/truck.png',
+var icon = L.icon({
+    iconUrl: '../assets/arrow.png',
 
     iconSize:     [40, 40], // size of the icon
     iconAnchor:   [20, 30], // point of the icon which will correspond to marker's location
@@ -64,7 +64,7 @@ async function getTelemetry(params) {
     if (markers.length) {
         for (let i=0; i<data.result.length; i++) { 
             markers[i].unbindPopup()
-            markers[i].setLatLng([data.result[i].telemetry.position.value.latitude, data.result[i].telemetry.position.value.longitude], {icon: truckIcon})
+            markers[i].setLatLng([data.result[i].telemetry.position.value.latitude, data.result[i].telemetry.position.value.longitude], {icon: icon})
             let speed = Math.round((data.result[i].telemetry.position.value.speed)/1.609)
 
             if(data.result[i].telemetry['ble.sensor.temperature.1']) {
@@ -89,7 +89,7 @@ async function getTelemetry(params) {
         }
     } else {
         for (let i=0; i<data.result.length; i++) {
-            var marker = L.marker([data.result[i].telemetry.position.value.latitude, data.result[i].telemetry.position.value.longitude], {icon: truckIcon}).addTo(map)
+            var marker = L.marker([data.result[i].telemetry.position.value.latitude, data.result[i].telemetry.position.value.longitude], {icon: icon}, {rotationAngle: data.result[i].telemetry.position.value.direction}).addTo(map)
             markers.push(marker)
             let speed = Math.round((data.result[i].telemetry.position.value.speed)/1.609)
 
@@ -108,15 +108,13 @@ async function getTelemetry(params) {
                 <b> ${(speed==0)?'Stopped':'Moving'} on ${timeConverter(data.result[i].telemetry.position.ts)}</b></br>
                 <b> Speed: ${Math.round((data.result[i].telemetry.position.value.speed)/1.609)} Mph</b></br>
                 <b> Device ID: ${data.result[i].id}</b></br>
-                
+                <b> Ignition: ${(data.result[i]['engine.ignition.status'])?'On':'Off'}</b>
                 `)
             }
         }
     }
 
 }
-
-
 
 getDevices()
 setInterval(function() {

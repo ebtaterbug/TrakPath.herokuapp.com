@@ -10,7 +10,8 @@
     height: 85vh;
     width: 100%;
     position: absolute;
-    right: 0px
+    right: 0px;
+    z-index: 0;
 }
 
 .report {

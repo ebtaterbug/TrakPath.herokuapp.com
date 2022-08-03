@@ -15,7 +15,7 @@ async function loginFormHandler(event) {
       });
   
       if (response.ok) {
-        window.location.replace('/');
+        window.location.replace('/map');
       } else {
         alert('Wrong Password or Email');
       }
