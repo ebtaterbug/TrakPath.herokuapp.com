@@ -52,7 +52,7 @@ var markers = []
 
 async function getTelemetry(params) {
 
-    let response = await fetch(`https://flespi.io/gw/devices/${params.join()}/telemetry/ble.sensor.temperature.1,position,solar.panel.charging.status,battery.level,ble.sensor.humidity.1`, {
+    let response = await fetch(`https://flespi.io/gw/devices/${params.join()}/telemetry/ble.sensor.temperature.1,position,solar.panel.charging.status,battery.level,ble.sensor.humidity.1,engine.ignition.status`, {
         method: 'GET',
         headers: {
             Authorization: 'FlespiToken e2SFPN6kTwArUxc4HjWilFsyiZUcSYYWOErrioCZK0gsogmTp9ZBCgXK5FKNszy4',
@@ -82,7 +82,7 @@ async function getTelemetry(params) {
                 <b> ${(speed==0)?'Stopped':'Moving'} on ${timeConverter(data.result[i].telemetry.position.ts)}</b></br>
                 <b> Speed: ${Math.round((data.result[i].telemetry.position.value.speed)/1.609)} Mph</b></br>
                 <b> Device ID: ${data.result[i].id}</b></br>
-                <b> Ignition: ${(data.result[i]['engine.ignition.status'])?'On':'Off'}</b>
+                <b> Ignition: ${(data.result[i].telemetry['engine.ignition.status'].value)?'On':'Off'}</b>
                 `)
             }
 
@@ -93,7 +93,7 @@ async function getTelemetry(params) {
             markers.push(marker)
             let speed = Math.round((data.result[i].telemetry.position.value.speed)/1.609)
 
-            if(data.result[i].telemetry['ble.sensor.temperature.1']) {
+            if(data.result[i].telemetry['engine.ignition.status'].value) {
                 marker.bindPopup(`
 
                 <b>${(speed==0)?'Stopped':'Moving'} on ${timeConverter(data.result[i].telemetry.position.ts)}</b></br>
@@ -108,7 +108,7 @@ async function getTelemetry(params) {
                 <b> ${(speed==0)?'Stopped':'Moving'} on ${timeConverter(data.result[i].telemetry.position.ts)}</b></br>
                 <b> Speed: ${Math.round((data.result[i].telemetry.position.value.speed)/1.609)} Mph</b></br>
                 <b> Device ID: ${data.result[i].id}</b></br>
-                <b> Ignition: ${(data.result[i]['engine.ignition.status'])?'On':'Off'}</b>
+                <b> Ignition: ${(data.result[i].telemetry['engine.ignition.status'].value)?'On':'Off'}</b>
                 `)
             }
         }

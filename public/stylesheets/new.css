@@ -14,6 +14,28 @@
     z-index: 0;
 }
 
+.title {
+    font-size: 3.5em;
+}
+
+.login {
+    margin-top: 27%;
+}
+
+.btn-login {
+    background-color: #34b44f;
+    border-radius: 5px;
+    border-color: #34b44f;
+    border-style: none;
+    color: white;
+    padding: 10px 40px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    box-shadow: 0px 2px 5px #aaaaaa;
+}
+
 .report {
     font-size: small;
 }
