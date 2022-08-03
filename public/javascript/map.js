@@ -93,7 +93,7 @@ async function getTelemetry(params) {
             markers.push(marker)
             let speed = Math.round((data.result[i].telemetry.position.value.speed)/1.609)
 
-            if(data.result[i].telemetry['engine.ignition.status'].value) {
+            if(data.result[i].telemetry['ble.sensor.temperature.1'].value) {
                 marker.bindPopup(`
 
                 <b>${(speed==0)?'Stopped':'Moving'} on ${timeConverter(data.result[i].telemetry.position.ts)}</b></br>
