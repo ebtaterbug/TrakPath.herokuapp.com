@@ -119,4 +119,4 @@ async function getTelemetry(params) {
 getDevices()
 setInterval(function() {
     getTelemetry(devices)
-}, 15000)
+}, 30000)
