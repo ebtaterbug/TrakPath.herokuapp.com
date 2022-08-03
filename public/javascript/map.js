@@ -82,7 +82,7 @@ async function getTelemetry(params) {
                 <b> ${(speed==0)?'Stopped':'Moving'} on ${timeConverter(data.result[i].telemetry.position.ts)}</b></br>
                 <b> Speed: ${Math.round((data.result[i].telemetry.position.value.speed)/1.609)} Mph</b></br>
                 <b> Device ID: ${data.result[i].id}</b></br>
-                
+                <b> Ignition: ${(data.result[i]['engine.ignition.status'])?'On':'Off'}</b>
                 `)
             }
 
